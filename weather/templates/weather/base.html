@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <!-- Add Navbar -->
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home/">Home</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a class="btn btn-link btn-light" href="#">{{ user.first_name }}({{ user.username }})</a>
+                        <a class="btn btn-link btn-light" href="{% url 'weather:logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <span class="input-group">
+                            <form class="form-inline" action="{% url 'weather:login' %}" method="post">
+                                {% csrf_token %}
+                                    <input type="text" class="form-control" placeholder="Username" name="username" >
+                                    <input type="password" class="form-control" placeholder="Password" name="password" >
+                                    <button class="btn btn-secondary" type="submit">Login</button>
+                            </form>
+                            <form class="form-inline" action="{% url 'weather:registration' %}" method="get">
+                                {% csrf_token %}
+                                <button class="btn btn-primary" type="submit">Sign Up</button>
+                            </form>
+                        </span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+            {% block content %}
+            {% endblock %}
+
+    </body>
+
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-light">
+    <section class="justify-left p-4 border-bottom">
+        <span>Andrew Tracey, 2022. &emsp; Powered by Tomorrow.io. &emsp; Connect with me: &nbsp;</span>
+        <span>
+            <a href="https://www.linkedin.com/in/andrew-tracey/" class="me-4" target="_blank">
+                LinkedIn
+            </a>
+        </span>
+        <span class="text-white">_</span>
+        <span>
+            <a href="https://github.com/andrewt110216" class="me-4" target="_blank">
+                GitHub
+            </a>
+        </span>
+    </section>
+</footer>
+</html>

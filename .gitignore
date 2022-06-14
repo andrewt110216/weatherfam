@@ -1,0 +1,14 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore Python cache files
+**/__pycache__/
+
+# Ignore VS Code files
+.vscode
+
+# Ignore user image uploads for followed people
+static/media/images/
+
+# Ignore Django migrations
+weather/migrations/*
