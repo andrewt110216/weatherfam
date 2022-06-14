@@ -36,8 +36,8 @@ def add_weather_data(people):
     # Set dates for which weather data is needed
     all_dates = [date.today() + timedelta(days=i) for i in range(3)]
     
-    for person in people:
-        location = person.location
+    for up in people:
+        location = up.person.location
         days = []
         for cur_date in all_dates:
             data = {'temp': 'n/a',
@@ -55,7 +55,7 @@ def add_weather_data(people):
                 data['icon_path'] = get_icon_path(weather.weather_code)
             days.append(data)
         # attach data as attribute to person
-        person.days = days
+        up.person.days = days
 
 # Create your views here.
 # =============================================================================
@@ -64,9 +64,7 @@ def home(request):
     context = {}
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
-        # TODO refactor this line. should be able to work with up objects, filtered on user
-        # TEST - MAKING A CHANGE IN THE REFACTOR BRANCH.
-        people = [Person.objects.get(pk=up.person_id) for up in user.user_person_set.all()]
+        people = User_Person.objects.filter(user_id=user)
         add_weather_data(people)
         context['people'] = people
     return render(request, 'weather/home.html', context)
