@@ -64,6 +64,8 @@ def home(request):
     context = {}
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
+        # TODO refactor this line. should be able to work with up objects, filtered on user
+        # TEST - MAKING A CHANGE IN THE REFACTOR BRANCH.
         people = [Person.objects.get(pk=up.person_id) for up in user.user_person_set.all()]
         add_weather_data(people)
         context['people'] = people
