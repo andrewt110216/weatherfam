@@ -23,6 +23,11 @@
                             <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.1.icon_path }}" alt="n/a"></td>
                             <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.2.icon_path }}" alt="n/a"></td>
                         </tr>
+                        <tr> <!-- Description Row -->
+                            <td class="">{{ up.person.days.0.description }}</td>
+                            <td class="">{{ up.person.days.1.description }}</td>
+                            <td class="">{{ up.person.days.2.description }}</td>
+                        </tr>
                         <tr> <!-- Temperature Row -->
                             <td class="h5">{{ up.person.days.0.temp }} &deg;</td>
                             <td class="h5">{{ up.person.days.1.temp }} &deg;</td>

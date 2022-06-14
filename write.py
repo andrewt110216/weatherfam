@@ -26,12 +26,14 @@ def write_location():
         name='Santa Monica',
         latitude='34.01927618420224',
         longitude='-118.49376589583301',
+        timezone='America/Los_Angeles',
     )
     location1.save()
     location2 = Location(
         name='Chicago',
         latitude='41.9251221810808',
         longitude='-87.63741632179469',
+        timezone='America/Chicago',
     )
     location2.save()
 
@@ -77,9 +79,7 @@ def write_weather():
         location=Location.objects.get(name='Santa Monica'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 9),
-        step = '1d',
         temp=68,
-        feels_like=68,
         weather_code=21080,
     )
     day1.save()
@@ -87,9 +87,7 @@ def write_weather():
         location=Location.objects.get(name='Santa Monica'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 10),
-        step = '1d',
         temp=71,
-        feels_like=71,
         weather_code=21060,
     )
     day2.save()
@@ -97,9 +95,7 @@ def write_weather():
         location=Location.objects.get(name='Santa Monica'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 11),
-        step = '1d',
         temp=72,
-        feels_like=72,
         weather_code=10000,
     )
     day3.save()
@@ -107,9 +103,7 @@ def write_weather():
         location=Location.objects.get(name='Santa Monica'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 12),
-        step = '1d',
         temp=74,
-        feels_like=74,
         weather_code=10000,
     )
     day4.save()
@@ -119,9 +113,7 @@ def write_weather():
         location=Location.objects.get(name='Chicago'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 9),
-        step = '1d',
         temp=69,
-        feels_like=69,
         weather_code=10000,
     )
     day1.save()
@@ -129,7 +121,6 @@ def write_weather():
         location=Location.objects.get(name='Chicago'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 10),
-        step = '1d',
         temp=77,
         feels_like=77,
         weather_code=10010,
@@ -139,9 +130,7 @@ def write_weather():
         location=Location.objects.get(name='Chicago'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 11),
-        step = '1d',
         temp=73,
-        feels_like=73,
         weather_code=10010,
     )
     day3.save()
@@ -149,9 +138,7 @@ def write_weather():
         location=Location.objects.get(name='Chicago'),
         timestamp=datetime(2022, 6, 9, 10, 0, tzinfo=timezone.utc),
         date = date(2022, 6, 12),
-        step = '1d',
         temp=66,
-        feels_like=66,
         weather_code=21000,
     )
     day4.save()
@@ -183,7 +170,9 @@ def clean_data():
 
 # DRIVER CODE
 clean_data()
+
 write_location()
 write_person()
-write_weather()
 write_user_person()
+
+# write_weather()

@@ -3,12 +3,18 @@ from django.conf import settings
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 from datetime import date, time
+from .funcs import get_timezones
+
+# Constants
+TIMEZONES = get_timezones()
 
 # Create your models here.
 class Location(models.Model):
     name = models.CharField(max_length=20)
     latitude = models.CharField(max_length=20)
     longitude = models.CharField(max_length=20)
+    TZ_CHOICES = [(readable, readable) for readable, offset in TIMEZONES.items()]
+    timezone = models.CharField(max_length=30, choices=TZ_CHOICES)
 
 class Person(models.Model):
     first_name = models.CharField(max_length=20)
@@ -20,12 +26,9 @@ class Person(models.Model):
 class Weather(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=now)
-    STEP_CHOICES = [('1d', 'Day'), ('1h', 'Hour')]
-    step = models.CharField(max_length=2, choices=STEP_CHOICES)
+    step = models.CharField(max_length=2, default='1d')
     date = models.DateField(default=date(1970, 1, 1))
-    hour = models.TimeField(default=time(0, 0))
     temp = models.IntegerField()
-    feels_like = models.IntegerField()
     weather_code = models.CharField(max_length=5)
 
 class User_Person(models.Model):
