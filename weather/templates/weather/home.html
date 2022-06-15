@@ -2,47 +2,55 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-    <div class="card-deck m-4">
+    <h2 class="text-center mt-4">My People</h2>
+    <hr color=#2C3E50 class="mx-4">
+    <div class="row"> <!-- Row Wrapping All Cards -->
         {% for up in people %}
-        <div class="card mt-4">
-            <div class="card-header bg-light">
-                <img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}"
-                width="100em" height="100em" alt="Person Image">
-                <span class="h3 text-center">{{ up.person.first_name }} - {{up.person.location.name}}</span>
-            </div> <!-- End of Card Header -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table text-center">
-                        <tr> <!-- Header Row -->
-                            <th>Today</th>
-                            <th>{{ up.person.days.1.day_name }}</th>
-                            <th>{{ up.person.days.2.day_name }}</th>
-                        </tr>
-                        <tr> <!-- Icon Row -->
-                            <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.0.icon_path }}" alt="n/a"></td>
-                            <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.1.icon_path }}" alt="n/a"></td>
-                            <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.2.icon_path }}" alt="n/a"></td>
-                        </tr>
-                        <tr> <!-- Description Row -->
-                            <td class="">{{ up.person.days.0.description }}</td>
-                            <td class="">{{ up.person.days.1.description }}</td>
-                            <td class="">{{ up.person.days.2.description }}</td>
-                        </tr>
-                        <tr> <!-- Temperature Row -->
-                            <td class="h5">{{ up.person.days.0.temp }} &deg;</td>
-                            <td class="h5">{{ up.person.days.1.temp }} &deg;</td>
-                            <td class="h5">{{ up.person.days.2.temp }} &deg;</td>
-                        </tr>
-                    </table>
-                </div> <!-- End of Weather Table Container -->
-            </div> <!-- End of Card Body -->
-        </div> <!-- End of Card -->
-        {% endfor %}
-    </div> <!-- End of Card Deck -->
-
+        <div class="col-lg-6 col-md-12"> <!-- Grid -->
+            <div class="card m-4 border-dark"> <!-- Card -->
+                <div class="card-header" style="background-color:#FEF9E7">
+                    <div class="row align-items-center">
+                        <div class="column col-sm"><img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}" width="100em" height="100em" alt="Profile Image"></div>
+                        <div class="column col-sm text-center">
+                            <div class="h4 mb-1">{{ up.person.first_name }}</div>
+                            <div class="h5 font-weight-light">{{ up.person.location.name }}</div>
+                        </div>
+                        <div class="column col-sm text-right pr-4">
+                            <div class="h4">{{ up.person.days.0.temp }} &deg;</div>
+                            <img src="{{ MEDIA_URL }}{{ up.person.days.0.icon_path }}" width="50em" height="50em" alt="n/a">
+                            <div class="font-weight-light h6">{{ up.person.days.0.description }}</div>
+                        </div>
+                    </div>
+                </div> <!-- End of Card Header -->
+                <div class="card-body" style="background-color: white">
+                    <div class="table-responsive">
+                        <table class="table text-center" style="table-layout:fixed">
+                            <tr> <!-- Header Row -->
+                                <th class="h5">Today</th>
+                                <th class="h5">{{ up.person.days.1.day_name }}</th>
+                                <th class="h5">{{ up.person.days.2.day_name }}</th>
+                            </tr>
+                            <tr> <!-- Temperature Row -->
+                                <td class="h4">{{ up.person.days.0.temp }} &deg;</td>
+                                <td class="h4">{{ up.person.days.1.temp }} &deg;</td>
+                                <td class="h4">{{ up.person.days.2.temp }} &deg;</td>
+                            </tr>
+                            <tr> <!-- Icon Row -->
+                                <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.0.icon_path }}" width="60em" height="60em" alt="n/a"><br><span class="font-weight-light h6">{{ up.person.days.0.description }}</span></td>
+                                <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.1.icon_path }}" width="60em" height="60em" alt="n/a"><br><span class="font-weight-light h6">{{ up.person.days.1.description }}</span></td>
+                                <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.2.icon_path }}" width="60em" height="60em" alt="n/a"><br><span class="font-weight-light h6">{{ up.person.days.2.description }}</span></td>
+                            </tr>
+                            </tr>
+                        </table>
+                    </div> <!-- End of Weather Table Container -->
+                </div> <!-- End of Card Body -->
+            </div> <!-- End of Card -->
+        </div> <!-- End of Grid -->
+            {% endfor %}
+    </div> <!-- End of Row Wrapping All Cards -->
     {% else %} <!-- If User Not Logged In -->
 
-    <div class="container">
+    <div class="container m-4">
         <h1>Welcome to Project Beta!</h1>
         <p class="">Please log in to view your People.</p>
     </div>

@@ -1,26 +1,26 @@
 {% extends "weather/base.html" %}
 
 {% block content %}
-<form action="{% url 'weather:registration' %}" method="post">
+<form class="m-4" action="{% url 'weather:registration' %}" method="post">
     {% csrf_token %}
     <div class="container">
       <h1>Sign Up</h1>
       <hr>
       <div class="form-group">
           <label for="username"><b>User Name</b></label>
-          <input type="text" class="form-control" placeholder="Enter User Name: " name="username" required>
+          <input type="text" class="form-control mb-4" placeholder="Enter User Name: " name="username" required>
           <label for="firstname"><b>First Name</b></label>
-          <input type="text" class="form-control" placeholder="Enter First Name: " name="firstname" required>
+          <input type="text" class="form-control mb-4" placeholder="Enter First Name: " name="firstname" required>
           <label for="lastname"><b>Last Name</b></label>
-          <input type="text" class="form-control" placeholder="Enter Last Name: " name="lastname" required>
+          <input type="text" class="form-control mb-4" placeholder="Enter Last Name: " name="lastname" required>
           <label for="psw"><b>Password</b></label>
-          <input type="password" class="form-control" placeholder="Enter Password: " name="password" required>
+          <input type="password" class="form-control mb-4" placeholder="Enter Password: " name="password" required>
           {% if message %}
           <div class="alert alert-warning">
               {{ message }}
           </div>
           {% endif %}
-          <button class="btn btn-primary" type="submit">Sign up</button>
+          <button class="btn btn-primary mt-4" type="submit">Sign up</button>
       </div>
     </div>
   </form>

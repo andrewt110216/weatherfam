@@ -2,22 +2,22 @@
 <html lang="en">
     <head>
         {% load static %}
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
-    <body>
+    <body style="background-color:#D5D8DC">
         <!-- Add Navbar -->
-        <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar" style="background-color:#2C3E50; color:white">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/home/">Home</a>
+                    <a class="navbar-brand" style="color:white" href="/home/">Home</a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li>
-                        <a class="btn btn-link btn-light" href="#">{{ user.first_name }}({{ user.username }})</a>
-                        <a class="btn btn-link btn-light" href="{% url 'weather:logout' %}">Logout</a>
+                        <a class="btn btn-link btn-light" style="color:#2C3E50" href="#">Welcome, {{ user.first_name.title }} ({{ user.username }})</a>
+                        <a class="btn btn-link btn-light" style="color:#2C3E50" href="{% url 'weather:logout' %}">Logout</a>
                     </li>
                     {% else %}
                     <li>
@@ -39,26 +39,24 @@
             </div>
         </nav>
 
-            {% block content %}
-            {% endblock %}
-
+        <!-- MAIN BODY CONTENT -->
+        {% block content %}
+        {% endblock %}
+        
     </body>
 
 <!-- Footer -->
-<footer class="text-center text-lg-start bg-light">
+<footer class="text-center align-middle text-lg-start" style="background-color:#2C3E50; color:white">
     <section class="justify-left p-4 border-bottom">
-        <span>Andrew Tracey, 2022. &emsp; Powered by Tomorrow.io. &emsp; Connect with me: &nbsp;</span>
-        <span>
-            <a href="https://www.linkedin.com/in/andrew-tracey/" class="me-4" target="_blank">
-                LinkedIn
-            </a>
-        </span>
-        <span class="text-white">_</span>
-        <span>
-            <a href="https://github.com/andrewt110216" class="me-4" target="_blank">
-                GitHub
-            </a>
-        </span>
+        <div class="row">
+            <div class="column col-sm">Andrew Tracey, 2022.</div>
+            <div class="column col-sm">Connect with me: &nbsp;
+                <a href="https://www.linkedin.com/in/andrew-tracey/" class="me-4" target="_blank" style="color:white; text-decoration: underline;">LinkedIn</a>
+                <span>&nbsp;</span>
+                <a href="https://github.com/andrewt110216" class="me-4" target="_blank" style="color:white; text-decoration: underline;">GitHub</a>
+            </div>
+            <div class="column col-sm">Powered by Tomorrow.io.</div>
+        </div>
     </section>
 </footer>
 </html>
