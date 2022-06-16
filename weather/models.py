@@ -28,6 +28,7 @@ class Weather(models.Model):
     timestamp = models.DateTimeField(default=now)
     step = models.CharField(max_length=2, default='1d')
     date = models.DateField(default=date(1970, 1, 1))
+    hour = models.IntegerField(default=0)
     temp = models.IntegerField()
     weather_code = models.CharField(max_length=5)
 

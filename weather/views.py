@@ -23,67 +23,71 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 API_BASE_URL = 'https://api.tomorrow.io/v4/timelines'
 API_KEY = 'P0upWa3NF5mlabyrkmlCDqZWDblfSUUc'
 API_RESULT_LIFETIME = timedelta(hours=6)
-WEATHER_CODES = get_codes()
+WEATHER_CODES, WEATHER_CODES_DAY = get_codes()
 
 # Helper functions for views
 # =============================================================================
-def api_request(weather: Weather, forecast_date: date, location: Location) -> Weather:
+def api_request(
+        weather: Weather,
+        current_time: datetime,
+        location: Location,
+        period: str= 'day',
+    ) -> Weather:
     """
-    Issue an API request to obtain an updated weather forecast for the current
-    date and the subsequent 2 days.
+    Issue an API request to obtain weather forecast for the indicated period.
     
-    :param weather: the current best result from the database, or None
-    :param forecast_date: datetime.date object of the date needed
-    :param location: Location object for the weather needed
+    :param Weather weather: the current best result from the database, or None
+    :param datetime current_time: current local time (tz aware)
+    :param Location location: location for which weather is needed
+    :param str period: 'day' for next 3 days, 'hour' for current hour
     :return: a Weather object of the successful API or request or None
     """
 
-    # convert forecast date into datetime with time=0:00
-    if isinstance(forecast_date, datetime) == False:
-        # startTime cannot be more than 6 hours in the past, so append the
-        # the current local time to the forecast_date
-        local_time = datetime.now(tz=pytz.timezone(location.timezone)).time()
-        startTime = datetime.combine(forecast_date, local_time)
-    elif isinstance(forecast_date, datetime):
-        startTime = forecast_date
-    else:
-        print('> Log: forecast_date needs to be a date or datetime object')
-        exit()
+    TIMESTEPS = {'hour': '1h', 'day': '1d'}
+    step = TIMESTEPS[period]
+    TIMEDELTAS = {'hour': timedelta(hours=1), 'day': timedelta(days=3)}
+    CODE_PARAM = {'hour': 'weatherCode', 'day': 'watherCodeDay'}
 
+    local_tz = current_time.tzinfo
     lat_long = str(location.latitude) + ',' + str(location.longitude)
     params = {
         'location': lat_long,
-        'startTime': startTime.isoformat() + 'Z',
-        'endTime': (startTime + timedelta(days=3)).isoformat() + 'Z',
-        'timesteps': '1d',
-        'fields': ['temperature', 'weatherCodeDay'],
+        'startTime': current_time.isoformat(),
+        'endTime': (current_time + TIMEDELTAS[period]).isoformat(),
+        'timesteps': step,
+        'fields': ['temperature', CODE_PARAM[period]],
         'units': 'imperial',
         'apikey': API_KEY,
     }
     response = requests.get(API_BASE_URL, params)
     response_dict = response.json()
     if response.status_code == 200:
-        # save json file for debugging and history
-        out_directory = BASE_DIR.parent.joinpath('api-samples')
-        out_filename = f"{location.name.lower().replace(' ', '-')}-1d-{forecast_date.isoformat()}-" \
+        out_directory = BASE_DIR.parent.joinpath('mysite/weather/api-responses')
+        out_filename = f"{location.name.lower().replace(' ', '-')}-" \
+                       f"{current_time.date().isoformat()}-T{current_time.hour}-{step}-" \
                        f"{datetime.now().time().isoformat('seconds').replace(':','-')}.json"
-        with open(out_directory.joinpath(out_filename), 'w') as f:
-            json.dump(response_dict, f, indent=4)
-        print(' > Log: saved API response to file:', {location.name}, {forecast_date})
+        if out_directory.exists():
+            with open(out_directory.joinpath(out_filename), 'w') as f:
+                json.dump(response_dict, f, indent=4)
+            print(' > Log: saved API response:', location.name, current_time.date(), current_time.hour, step)
+        else:
+            print(' > Log: API response not saved. Outfile path does not exist.')
 
         # now create Weather objects from API response, save, and return first
         # extract first interval (day) from response
         intervals = response_dict['data']['timelines'][0]['intervals']
         new_weathers = []
         for interval in intervals:
-            date_iso = interval['startTime']
-            date_obj = date.fromisoformat(date_iso[:date_iso.find('T')])
+            time_utc = datetime.fromisoformat(interval['startTime'].replace('Z', ''))
+            time_utc = time_utc.replace(tzinfo=pytz.utc)
+            time_local = time_utc.astimezone(tz=local_tz)
             new_weather = Weather(
                 location=location,
-                date=date_obj,
+                date=time_local.date(),
+                hour=time_local.hour,
                 temp=interval['values']['temperature'],
-                weather_code=interval['values']['weatherCodeDay'],
-                step='1d',
+                weather_code=interval['values'][CODE_PARAM[period]],
+                step=step,
             )
             new_weather.save()
             new_weathers.append(new_weather)
@@ -102,6 +106,8 @@ def api_request(weather: Weather, forecast_date: date, location: Location) -> We
 def add_weather_data(people: Person) -> None:
     """
     Get weather data and add as an attribute to each Person object.
+
+    Required weather data: current hour, next 3 days (starting with today)
     
     :param people: list of Person objects
     :side effect: adds days as an attribute to each Person object, which is a
@@ -110,7 +116,36 @@ def add_weather_data(people: Person) -> None:
     for up in people:
         location = up.person.location
         local_time_zone = pytz.timezone(location.timezone)
-        local_today = datetime.now(tz=local_time_zone).date()
+        local_now = datetime.now(tz=local_time_zone)
+        local_today = local_now.date()
+        local_hour = local_now.time().hour
+
+        # --- Get current hour weather data
+        weather = None
+        try:
+            query = Weather.objects.filter(
+                location=location,
+                date=local_today,
+                hour=local_hour,
+                step='1h')
+            weather = query.order_by("-timestamp")[:1].get()
+        except Weather.DoesNotExist:
+            pass
+        finally:
+            if weather is None:
+                weather = api_request(weather, local_now, location, 'hour')
+        
+        data = {'temp': 'n/a',
+                'description': 'n/a',
+                'icon_path': None,}
+        if weather:
+            data['temp'] = int(weather.temp)
+            code = weather.weather_code
+            data['description'] = WEATHER_CODES[str(code)]
+            data['icon_path'] = get_icon_path(code)
+        up.person.cur_weather = data
+
+        # --- Get daily weather data
         local_dates = [local_today + timedelta(days=i) for i in range(3)]
         days = []
         for local_date in local_dates:
@@ -120,23 +155,23 @@ def add_weather_data(people: Person) -> None:
                     'day_name': calendar.day_name[local_date.weekday()]}
             weather = None
             try:
-                query = Weather.objects.filter(location=location, date=local_date)
-                # choose the weather object most recently downloaded from API
+                query = Weather.objects.filter(
+                    location=location,
+                    date=local_date,
+                    step='1d')
                 weather = query.order_by("-timestamp")[:1].get()
             except Weather.DoesNotExist:
                 pass
             finally:
-                # check if Weather record pulled from database is expired
                 if weather is None or weather.timestamp + API_RESULT_LIFETIME < now():
-                    weather = api_request(weather, local_date, location)
+                    weather = api_request(weather, local_now, location, 'day')
             
             # update data dictionary if valid weather object was obtained
             if weather:
                 data['temp'] = int(weather.temp)
                 code = weather.weather_code
-                data['description'] = WEATHER_CODES[str(code)]
+                data['description'] = WEATHER_CODES_DAY[str(code)]
                 data['icon_path'] = get_icon_path(code)
-
             days.append(data)
             
         # attach days (the list of daily data dicts) to Person object

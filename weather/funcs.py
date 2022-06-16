@@ -16,4 +16,4 @@ def get_codes():
     file_path = BASE_DIR.joinpath('static/weather/codes.json')
     with open(file_path) as f:
         codes = json.load(f)
-    return codes['weatherCodeDay']
+    return codes['weatherCode'], codes['weatherCodeDay']

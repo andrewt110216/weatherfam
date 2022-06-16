@@ -15,10 +15,10 @@
                             <div class="h4 mb-1">{{ up.person.first_name }}</div>
                             <div class="h5 font-weight-light">{{ up.person.location.name }}</div>
                         </div>
-                        <div class="column col-sm text-right pr-4">
-                            <div class="h4">{{ up.person.days.0.temp }} &deg;</div>
-                            <img src="{{ MEDIA_URL }}{{ up.person.days.0.icon_path }}" width="50em" height="50em" alt="n/a">
-                            <div class="font-weight-light h6">{{ up.person.days.0.description }}</div>
+                        <div class="column col-sm text-right pr-4"> <!-- Current Weather -->
+                            <div class="h4">{{ up.person.cur_weather.temp }} &deg;</div>
+                            <img src="{{ MEDIA_URL }}{{ up.person.cur_weather.icon_path }}" width="50em" height="50em" alt="n/a">
+                            <div class="font-weight-light h6">{{ up.person.cur_weather.description }}</div>
                         </div>
                     </div>
                 </div> <!-- End of Card Header -->
