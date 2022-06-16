@@ -12,3 +12,6 @@ static/media/images/
 
 # Ignore Django migrations
 weather/migrations/*
+
+# Ignore saved api responses
+weather/api-responses
