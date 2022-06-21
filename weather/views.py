@@ -9,6 +9,7 @@ import calendar
 from django.shortcuts import  render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.core.files import File
 from django.utils.timezone import now  # default timezone = UTC
 # Local files
 from .models import Person, Weather, User_Person, Location
@@ -46,7 +47,7 @@ def api_request(
     TIMESTEPS = {'hour': '1h', 'day': '1d'}
     step = TIMESTEPS[period]
     TIMEDELTAS = {'hour': timedelta(hours=1), 'day': timedelta(days=3)}
-    CODE_PARAM = {'hour': 'weatherCode', 'day': 'watherCodeDay'}
+    CODE_PARAM = {'hour': 'weatherCode', 'day': 'weatherCodeDay'}
 
     local_tz = current_time.tzinfo
     lat_long = str(location.latitude) + ',' + str(location.longitude)
@@ -190,6 +191,19 @@ def get_icon_path(code: str) -> Path:
     icon_path_abs = next(ICONS_DIR.glob(f'{code}*.png'))
     return icon_path_abs.relative_to(BASE_DIR / 'static/media/')
 
+def get_timezone(lat, long):
+    base_url = "https://maps.googleapis.com/maps/api/timezone/json?"
+    params = {
+        'location': f'{lat},{long}',
+        'timestamp': str(int(datetime.timestamp(datetime.now()))),
+        'key': 'AIzaSyDVmJci0N0Tf-4KTczZ1oCYi8dHFSLpIgM'
+    }
+    response = requests.get(base_url, params)
+    if response.status_code == 200:
+        return response.json()["timeZoneId"]
+    else:
+        return 'America/Los_Angeles'
+
 # Create your views here.
 # =============================================================================
 def home(request):
@@ -245,3 +259,34 @@ def registration_request(request):
         else:
             context['message'] = "User already exists."
             return render(request, 'weather/user_registration.html', context)
+
+def add_person_request(request):
+    context = {}
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            return render(request, 'weather/add_person.html', context)
+        elif request.method == 'POST':
+            latitude = request.POST['lat']
+            longitude = request.POST['long']
+            new_location = Location.objects.create(
+                name=request.POST['locationName'],
+                latitude=latitude,
+                longitude=longitude,
+                timezone=get_timezone(latitude, longitude),
+            )
+            new_location.save()
+            new_person = Person.objects.create(
+                first_name=request.POST['firstname'],
+                last_name=request.POST['lastname'],
+                image=File(request.FILES['formFile']),
+                location=new_location,
+            )
+            new_person.save()
+            new_user_person = User_Person.objects.create(
+                user=User.objects.get(username=request.user.username),
+                person=new_person,
+            )
+            new_user_person.save()
+            return redirect("weather:home")
+    else:
+        return render(request, 'weather/user_login.html', context)

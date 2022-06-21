@@ -2,13 +2,19 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-    <h2 class="text-center mt-4">My People</h2>
+    <div class="d-flex justify-content-between align-items-center mt-4 mx-4">
+        <h2 class="text-right">My People</h2>
+        <div>
+          <a class="btn btn-success" href="/weather/add-person/">+ Add Person</a>
+        </div>
+    </div>
+
     <hr color=#2C3E50 class="mx-4">
     <div class="row"> <!-- Row Wrapping All Cards -->
         {% for up in people %}
         <div class="col-lg-6 col-md-12"> <!-- Grid -->
             <div class="card m-4 border-dark"> <!-- Card -->
-                <div class="card-header" style="background-color:#FEF9E7">
+                <div class="card-header card-header-custom">
                     <div class="row align-items-center">
                         <div class="column col-sm"><img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}" width="100em" height="100em" alt="Profile Image"></div>
                         <div class="column col-sm text-center">
@@ -22,7 +28,7 @@
                         </div>
                     </div>
                 </div> <!-- End of Card Header -->
-                <div class="card-body" style="background-color: white">
+                <div class="card-body card-body-custom">
                     <div class="table-responsive">
                         <table class="table text-center" style="table-layout:fixed">
                             <tr> <!-- Header Row -->

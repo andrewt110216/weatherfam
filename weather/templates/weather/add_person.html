@@ -1,0 +1,52 @@
+{% extends "weather/base.html" %}
+
+{% block content %}
+<form class="m-4" enctype="multipart/form-data" action="{% url 'weather:add-person' %}" method="post">
+    {% csrf_token %}
+    <div class="container">
+        <h1>Add New Person</h1>
+        <hr>
+        <div class="form-group">
+            <label for="firstname" class="form-label"><b>First Name</b></label>
+            <input type="text" class="form-control mb-4" placeholder="Enter First Name: " name="firstname" required>
+            <label for="lastname" class="form-label"><b>Last Name</b></label>
+            <input type="text" class="form-control mb-4" placeholder="Enter Last Name: " name="lastname" required>
+
+            <label for="formFile" class="form-label"><b>Profile Image (optional)</b></label>
+            <input type="file" class="form-control mb-4" name="formFile">
+
+            <label for="locationName" class="form-label"><b>Location Name</b></label>
+            <input type="text" class="form-control mb-4" name="locationName">
+
+            <input type="text" id="lat" name="lat" placeholder="lat">
+            <input type="text" id="long" name="long" placeholder="long">
+
+            <div id="map"></div>
+            <br>
+            <script>
+              // Initialize locationPicker plugin
+              var lp = new locationPicker('map', {
+                setCurrentPosition: true, // You can omit this, defaults to true
+              }, {
+                zoom: 15 // You can set any google map options here, zoom defaults to 15
+              });
+            
+              // Listen to map idle event, listening to idle event more accurate than listening to ondrag event
+              google.maps.event.addListener(lp.map, 'idle', function (event) {
+                // Get current location and show it in HTML
+                var location = lp.getMarkerPosition();
+                document.getElementById('lat').value = location.lat;
+                document.getElementById('long').value = location.lng;
+              });
+            </script>
+
+            {% if message %}
+            <div class="alert alert-warning">
+                {{ message }}
+            </div>
+            {% endif %}
+            <button class="btn btn-primary mt-4" type="submit">Add Person</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

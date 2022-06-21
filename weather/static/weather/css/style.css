@@ -1,0 +1,34 @@
+
+/* CUSTOM COLOR SCHEME */
+body {
+    background-color:#D5D8DC;
+}
+
+.navbar-custom {
+    color:white;
+    background-color:#2C3E50;
+}
+
+.btn-light-custom {
+    color:#2C3E50;
+    background-color: white;
+    border-color: #f8f9fa;
+}
+
+.card-header-custom {
+    background-color:#FEF9E7;
+}
+
+.card-body-custom {
+    background-color: white;
+}
+
+.footer-custom {
+    background-color:#2C3E50;
+    color:white;
+}
+
+#map {
+    width: 100%;
+    height: 480px;
+}
