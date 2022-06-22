@@ -18,27 +18,13 @@
             <label for="locationName" class="form-label"><b>Location Name</b></label>
             <input type="text" class="form-control mb-4" name="locationName">
 
-            <input type="text" id="lat" name="lat" placeholder="lat">
-            <input type="text" id="long" name="long" placeholder="long">
+            <input type="hidden" id="lat" name="lat" placeholder="lat">
+            <input type="hidden" id="long" name="long" placeholder="long">
 
             <div id="map"></div>
             <br>
-            <script>
-              // Initialize locationPicker plugin
-              var lp = new locationPicker('map', {
-                setCurrentPosition: true, // You can omit this, defaults to true
-              }, {
-                zoom: 15 // You can set any google map options here, zoom defaults to 15
-              });
-            
-              // Listen to map idle event, listening to idle event more accurate than listening to ondrag event
-              google.maps.event.addListener(lp.map, 'idle', function (event) {
-                // Get current location and show it in HTML
-                var location = lp.getMarkerPosition();
-                document.getElementById('lat').value = location.lat;
-                document.getElementById('long').value = location.lng;
-              });
-            </script>
+            {% load static %}
+            <script src="{% static 'weather/js/map.js' %}"></script>
 
             {% if message %}
             <div class="alert alert-warning">

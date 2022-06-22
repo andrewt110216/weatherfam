@@ -268,24 +268,30 @@ def add_person_request(request):
         elif request.method == 'POST':
             latitude = request.POST['lat']
             longitude = request.POST['long']
-            new_location = Location.objects.create(
-                name=request.POST['locationName'],
-                latitude=latitude,
-                longitude=longitude,
-                timezone=get_timezone(latitude, longitude),
-            )
-            new_location.save()
+            # check if the location exists
+            try:
+                new_location = Location.objects.get(
+                    latitude=latitude,
+                    longitude=longitude)
+            except Location.DoesNotExist:
+                new_location = Location.objects.create(
+                    name=request.POST['locationName'],
+                    latitude=latitude,
+                    longitude=longitude,
+                    timezone=get_timezone(latitude, longitude))
+                new_location.save()
             new_person = Person.objects.create(
                 first_name=request.POST['firstname'],
                 last_name=request.POST['lastname'],
-                image=File(request.FILES['formFile']),
-                location=new_location,
-            )
+                location=new_location)
             new_person.save()
+            if request.FILES.__len__() != 0:
+                image = File(request.FILES['formFile'])
+                new_person.image = image
+                new_person.save()
             new_user_person = User_Person.objects.create(
                 user=User.objects.get(username=request.user.username),
-                person=new_person,
-            )
+                person=new_person)
             new_user_person.save()
             return redirect("weather:home")
     else:
