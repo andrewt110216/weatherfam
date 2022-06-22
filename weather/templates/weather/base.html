@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        {% load static %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/bootstrap.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/style.css' %}">
-
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVmJci0N0Tf-4KTczZ1oCYi8dHFSLpIgM"></script>
         <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
-
     </head>
     <body>
         <!-- Add Navbar -->
@@ -22,7 +20,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li>
-                        <a class="btn btn-link btn-light-custom" href="#">Welcome, {{ user.first_name.title }} ({{ user.username }})</a>
+                        <span class="btn btn-light-custom">Hi, {{ user.first_name.title }} ({{ user.username }})</span>
                         <a class="btn btn-link btn-light-custom" href="{% url 'weather:logout' %}">Logout</a>
                     </li>
                     {% else %}
@@ -30,13 +28,13 @@
                         <span class="input-group">
                             <form class="form-inline" action="{% url 'weather:login' %}" method="post">
                                 {% csrf_token %}
-                                    <input type="text" class="form-control" placeholder="Username" name="username" >
-                                    <input type="password" class="form-control" placeholder="Password" name="password" >
-                                    <button class="btn btn-secondary" type="submit">Login</button>
+                                    <input type="text" class="form-control mr-2" placeholder="Username" name="username" >
+                                    <input type="password" class="form-control mr-2" placeholder="Password" name="password" >
+                                    <button class="btn btn-primary mr-2" type="submit">Login</button>
                             </form>
                             <form class="form-inline" action="{% url 'weather:registration' %}" method="get">
                                 {% csrf_token %}
-                                <button class="btn btn-primary" type="submit">Sign Up</button>
+                                <button class="btn btn-success" type="submit">Sign Up</button>
                             </form>
                         </span>
                     </li>
