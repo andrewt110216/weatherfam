@@ -15,3 +15,6 @@ weather/migrations/*
 
 # Ignore saved api responses
 weather/api-responses
+
+# Ignore file to populate db with testing data
+write.py
