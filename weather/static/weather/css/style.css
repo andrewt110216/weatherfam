@@ -28,6 +28,7 @@ body {
     color:white;
 }
 
+/* MAP FOR LOCATION CHOOSING */
 #map {
     width: 100%;
     height: 480px;
