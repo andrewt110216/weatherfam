@@ -15,7 +15,7 @@ from django.utils.timezone import now  # default timezone = UTC
 from .models import Person, Weather, User_Person, Location
 from .funcs import get_codes
 
-# NOTE REGARDING TIMEZONES
+# REGARDING TIMEZONES
 # Timestamps are stored as UTC so should be compared to UTC time
 # Dates and times of Weather data are stored in the local time zone
 
@@ -296,3 +296,43 @@ def add_person_request(request):
             return redirect("weather:home")
     else:
         return render(request, 'weather/user_login.html', context)
+
+def detail_person(request, id):
+    context = {}
+    context['person'] = Person.objects.get(id=id)
+    return render(request, 'weather/detail_person.html', context)
+
+def delete_person(request, id):
+    person_to_delete = Person.objects.get(id=id)
+    person_to_delete.delete()
+    return redirect("weather:home")
+
+def update_person(request, id):
+    context = {}
+    if request.method == 'GET':
+        return render(context, f'weather/detail-person/{id}', context)
+    elif request.method == 'POST':
+        person = Person.objects.get(id=id)
+        latitude = request.POST['lat']
+        longitude = request.POST['long']
+        # check if the location exists
+        try:
+            new_location = Location.objects.get(
+                latitude=latitude,
+                longitude=longitude)
+        except Location.DoesNotExist:
+            new_location = Location.objects.create(
+                name=request.POST['locationName'],
+                latitude=latitude,
+                longitude=longitude,
+                timezone=get_timezone(latitude, longitude))
+            new_location.save()
+        person.first_name = request.POST['firstname']
+        person.last_name = request.POST['lastname']
+        person.location = new_location
+        person.save()
+        if request.FILES.__len__() != 0:
+            image = File(request.FILES['formFile'])
+            person.image = image
+            person.save()
+        return redirect("weather:home")

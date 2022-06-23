@@ -16,11 +16,11 @@
         {% for up in people %}
         <div class="col-lg-6 col-md-12"> <!-- Grid -->
             <div class="card m-4 border-dark"> <!-- Card -->
-                <div class="card-header card-header-custom">
+                <div class="card-header card-header-custom"> <!-- Card Header-->
                     <div class="row align-items-center">
                         <div class="column col-sm"><img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}" width="100em" height="100em" alt="Profile Image"></div>
                         <div class="column col-sm text-center">
-                            <div class="h4 mb-1">{{ up.person.first_name }}</div>
+                            <a class="h4 mb-1" href="{% url 'weather:detail-person' up.person.id %}">{{ up.person.first_name }}</a>
                             <div class="h5 font-weight-light">{{ up.person.location.name }}</div>
                         </div>
                         <div class="column col-sm text-right pr-4"> <!-- Current Weather -->
