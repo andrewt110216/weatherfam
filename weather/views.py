@@ -2,7 +2,7 @@
 from pathlib import Path
 import requests
 import json
-from datetime import date, time, datetime, timedelta
+from datetime import datetime, timedelta
 import pytz
 import calendar
 # Django files
@@ -281,8 +281,7 @@ def add_person_request(request):
                     timezone=get_timezone(latitude, longitude))
                 new_location.save()
             new_person = Person.objects.create(
-                first_name=request.POST['firstname'],
-                last_name=request.POST['lastname'],
+                name=request.POST['name'],
                 location=new_location)
             new_person.save()
             if request.FILES.__len__() != 0:
@@ -327,8 +326,7 @@ def update_person(request, id):
                 longitude=longitude,
                 timezone=get_timezone(latitude, longitude))
             new_location.save()
-        person.first_name = request.POST['firstname']
-        person.last_name = request.POST['lastname']
+        person.name = request.POST['name']
         person.location = new_location
         person.save()
         if request.FILES.__len__() != 0:

@@ -20,7 +20,7 @@
                     <div class="row align-items-center">
                         <div class="column col-sm"><img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}" width="100em" height="100em" alt="Profile Image"></div>
                         <div class="column col-sm text-center">
-                            <a class="h4 mb-1" href="{% url 'weather:detail-person' up.person.id %}">{{ up.person.first_name }}</a>
+                            <a class="h4 mb-1" href="{% url 'weather:detail-person' up.person.id %}">{{ up.person.name }}</a>
                             <div class="h5 font-weight-light">{{ up.person.location.name }}</div>
                         </div>
                         <div class="column col-sm text-right pr-4"> <!-- Current Weather -->

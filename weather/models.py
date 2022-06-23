@@ -10,15 +10,14 @@ TIMEZONES = get_timezones()
 
 # Create your models here.
 class Location(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=30)
     latitude = models.CharField(max_length=20)
     longitude = models.CharField(max_length=20)
     TZ_CHOICES = [(readable, readable) for readable, offset in TIMEZONES.items()]
     timezone = models.CharField(max_length=30, choices=TZ_CHOICES)
 
 class Person(models.Model):
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20, blank=True)
+    name = models.CharField(max_length=30)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/people/',
                               default='images/person_default.jpeg')

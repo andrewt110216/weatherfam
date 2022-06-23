@@ -3,7 +3,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mt-4 mx-4">
     <span class=""><img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ person.image }}" width="100em" height="100em" alt="Profile Image"></span>
-    <h2 class="">{{ person.first_name }} {{ person.last_name }}</h2>
+    <h2 class="">{{ person.name }}</h2>
     <div><a class="btn btn-danger" href="{% url 'weather:delete-person' person.id %}">- Delete Person</a></div>
 </div>
 <hr color=#2C3E50 class="mx-4">
@@ -13,10 +13,8 @@
     {% csrf_token %}
     <div class="container">
         <div class="form-group">
-            <label for="firstname" class="form-label"><b>First Name</b></label>
-            <input type="text" class="form-control mb-4" value="{{ person.first_name }}" name="firstname" required>
-            <label for="lastname" class="form-label"><b>Last Name</b></label>
-            <input type="text" class="form-control mb-4" value="{{ person.last_name }}" name="lastname" required>
+            <label for="name" class="form-label"><b>Name</b></label>
+            <input type="text" class="form-control mb-4" value="{{ person.name }}" name="name" required>
 
             <label for="formFile" class="form-label"><b>Profile Image (optional). Please use a thumbnail image that is approximately square.</b></label>
             <input type="file" class="form-control mb-4" name="formFile">
