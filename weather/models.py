@@ -1,20 +1,19 @@
+from datetime import date
+
 from django.db import models
 from django.conf import settings
-from django.utils.timezone import now
-from django.contrib.auth.models import User
-from datetime import date, time
-from .funcs import get_timezones
+from django.utils.timezone import now # UTC timezone (per project settings)
 
-# Constants
-TIMEZONES = get_timezones()
+from .funcs import get_all_timezones
 
-# Create your models here.
+TIMEZONES = get_all_timezones()
+
 class Location(models.Model):
     name = models.CharField(max_length=30)
     latitude = models.CharField(max_length=20)
     longitude = models.CharField(max_length=20)
-    TZ_CHOICES = [(readable, readable) for readable, offset in TIMEZONES.items()]
-    timezone = models.CharField(max_length=30, choices=TZ_CHOICES)
+    TZ_NAMES = [(name, name) for name, _ in TIMEZONES.items()]
+    timezone = models.CharField(max_length=30, choices=TZ_NAMES)
 
 class Person(models.Model):
     name = models.CharField(max_length=30)
@@ -25,7 +24,7 @@ class Person(models.Model):
 class Weather(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=now)
-    step = models.CharField(max_length=2, default='1d')
+    step = models.CharField(max_length=2)
     date = models.DateField(default=date(1970, 1, 1))
     hour = models.IntegerField(default=0)
     temp = models.IntegerField()
@@ -35,9 +34,3 @@ class User_Person(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     date_added = models.DateField(default=now)
-
-    def __str__(self):
-        user = User.objects.get(pk=self.user_id)
-        person = Person.objects.get(pk=self.person_id)
-        person_name = f'{person.first_name} {person.last_name}'.title()
-        return f'User: {user.username} -> Person: {person_name}'

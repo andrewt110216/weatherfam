@@ -1,23 +1,20 @@
-# Python libraries
 from pathlib import Path
 import requests
 import json
 from datetime import datetime, timedelta
 import pytz
-import calendar
-# Django files
+
 from django.shortcuts import  render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.core.files import File
-from django.utils.timezone import now  # default timezone = UTC
-# Local files
+from django.utils.timezone import now  # UTC timezone (per project settings)
+
 from .models import Person, Weather, User_Person, Location
-from .funcs import get_codes
+from .funcs import get_codes, get_icon_path, get_timezone
 
 # REGARDING TIMEZONES
-# Timestamps are stored as UTC so should be compared to UTC time
-# Dates and times of Weather data are stored in the local time zone
+# Timestamps are stored as UTC. Weater data is stored in the local time zone
 
 # Constants
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +22,10 @@ API_BASE_URL = 'https://api.tomorrow.io/v4/timelines'
 API_KEY = 'P0upWa3NF5mlabyrkmlCDqZWDblfSUUc'
 API_RESULT_LIFETIME = timedelta(hours=6)
 WEATHER_CODES, WEATHER_CODES_DAY = get_codes()
+CODES = {'hour': WEATHER_CODES, 'day': WEATHER_CODES_DAY}
+TIMESTEPS = {'hour': '1h', 'day': '1d'}
+TIMEDELTAS = {'hour': timedelta(hours=1), 'day': timedelta(days=3)}
+CODE_PARAM = {'hour': 'weatherCode', 'day': 'weatherCodeDay'}
 
 # Helper functions for views
 # =============================================================================
@@ -32,7 +33,7 @@ def api_request(
         weather: Weather,
         current_time: datetime,
         location: Location,
-        period: str= 'day',
+        period: str='day',
     ) -> Weather:
     """
     Issue an API request to obtain weather forecast for the indicated period.
@@ -44,11 +45,7 @@ def api_request(
     :return: a Weather object of the successful API or request or None
     """
 
-    TIMESTEPS = {'hour': '1h', 'day': '1d'}
     step = TIMESTEPS[period]
-    TIMEDELTAS = {'hour': timedelta(hours=1), 'day': timedelta(days=3)}
-    CODE_PARAM = {'hour': 'weatherCode', 'day': 'weatherCodeDay'}
-
     local_tz = current_time.tzinfo
     lat_long = str(location.latitude) + ',' + str(location.longitude)
     params = {
@@ -82,10 +79,11 @@ def api_request(
             time_utc = datetime.fromisoformat(interval['startTime'].replace('Z', ''))
             time_utc = time_utc.replace(tzinfo=pytz.utc)
             time_local = time_utc.astimezone(tz=local_tz)
+            HOURS = {'day': 0, 'hour': time_local.hour}
             new_weather = Weather(
                 location=location,
                 date=time_local.date(),
-                hour=time_local.hour,
+                hour=HOURS[period],
                 temp=interval['values']['temperature'],
                 weather_code=interval['values'][CODE_PARAM[period]],
                 step=step,
@@ -104,116 +102,49 @@ def api_request(
     # if we made it here, we didn't get a new weather object. Return original one
     return weather
 
-def add_weather_data(people: Person) -> None:
-    """
-    Get weather data and add as an attribute to each Person object.
+def query_database(location: Location, local_now: datetime, period: str):
+    HOURS = {'day': 0, 'hour': local_now.time().hour}
+    try:
+        query = Weather.objects.filter(location=location,
+                                       date=local_now.date(),
+                                       hour=HOURS[period],
+                                       step=TIMESTEPS[period])
+        return query.order_by("-timestamp")[:1].get()
+    except Weather.DoesNotExist:
+        return None
 
-    Required weather data: current hour, next 3 days (starting with today)
-    
-    :param people: list of Person objects
-    :side effect: adds days as an attribute to each Person object, which is a
-                  list of dictionaries (keys: temp, icon, day_name) for each day
-    """
-    for up in people:
-        location = up.person.location
-        local_time_zone = pytz.timezone(location.timezone)
-        local_now = datetime.now(tz=local_time_zone)
-        local_today = local_now.date()
-        local_hour = local_now.time().hour
-
-        # --- Get current hour weather data
-        weather = None
-        try:
-            query = Weather.objects.filter(
-                location=location,
-                date=local_today,
-                hour=local_hour,
-                step='1h')
-            weather = query.order_by("-timestamp")[:1].get()
-        except Weather.DoesNotExist:
-            pass
-        finally:
-            if weather is None:
-                weather = api_request(weather, local_now, location, 'hour')
-        
-        data = {'temp': 'n/a',
-                'description': 'n/a',
-                'icon_path': None,}
-        if weather:
-            data['temp'] = int(weather.temp)
-            code = weather.weather_code
-            data['description'] = WEATHER_CODES[str(code)]
-            data['icon_path'] = get_icon_path(code)
-        up.person.cur_weather = data
-
-        # --- Get daily weather data
-        local_dates = [local_today + timedelta(days=i) for i in range(3)]
-        days = []
-        for local_date in local_dates:
-            data = {'temp': 'n/a',
-                    'description': 'n/a',
-                    'icon_path': None,
-                    'day_name': calendar.day_name[local_date.weekday()]}
-            weather = None
-            try:
-                query = Weather.objects.filter(
-                    location=location,
-                    date=local_date,
-                    step='1d')
-                weather = query.order_by("-timestamp")[:1].get()
-            except Weather.DoesNotExist:
-                pass
-            finally:
-                if weather is None or weather.timestamp + API_RESULT_LIFETIME < now():
-                    weather = api_request(weather, local_now, location, 'day')
-            
-            # update data dictionary if valid weather object was obtained
-            if weather:
-                data['temp'] = int(weather.temp)
-                code = weather.weather_code
-                data['description'] = WEATHER_CODES_DAY[str(code)]
-                data['icon_path'] = get_icon_path(code)
-            days.append(data)
-            
-        # attach days (the list of daily data dicts) to Person object
-        up.person.days = days
-
-def get_icon_path(code: str) -> Path:
-    """
-    Given a daily weather code, retrieve the relative path to the weather icon.
-
-    :param str code: Tomorrow.io API weather code for a timeline of one day
-    :return Path icon_path_rel: path to the icon, relative to media directory
-    """
-    ICONS_URL = 'static/media/images/icons/'
-    ICONS_DIR = BASE_DIR.joinpath(ICONS_URL)
-
-    icon_path_abs = next(ICONS_DIR.glob(f'{code}*.png'))
-    return icon_path_abs.relative_to(BASE_DIR / 'static/media/')
-
-def get_timezone(lat, long):
-    base_url = "https://maps.googleapis.com/maps/api/timezone/json?"
-    params = {
-        'location': f'{lat},{long}',
-        'timestamp': str(int(datetime.timestamp(datetime.now()))),
-        'key': 'AIzaSyDVmJci0N0Tf-4KTczZ1oCYi8dHFSLpIgM'
-    }
-    response = requests.get(base_url, params)
-    if response.status_code == 200:
-        return response.json()["timeZoneId"]
-    else:
-        return 'America/Los_Angeles'
+def get_weather(location: Location, local_now: datetime, period: str) -> dict:
+    data = {'temp': 'n/a', 'description': 'n/a', 'icon_path': None}
+    weather = query_database(location, local_now, period)
+    if weather is None or weather.timestamp + API_RESULT_LIFETIME < now():
+        weather = api_request(weather, local_now, location, period)
+    if weather:
+        code = weather.weather_code
+        data['description'] = CODES[period][str(code)]
+        data['icon_path'] = get_icon_path(code)
+        data['temp'] = int(weather.temp)
+        data['day_name'] = local_now.strftime("%A")
+    return data
 
 # Create your views here.
 # =============================================================================
 def home(request):
-    """Get person and weather data for display on home page"""
     context = {}
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user.username)
-        people = User_Person.objects.filter(user_id=user)
-        add_weather_data(people)
-        context['people'] = people
+        user_persons = User_Person.objects.filter(user_id=user)
+        for up in user_persons:
+            location = up.person.location
+            local_now = datetime.now(tz=pytz.timezone(location.timezone))
+            data = get_weather(location, local_now, 'hour')
+            up.person.cur_weather = data
+            local_dates = [local_now + timedelta(days=i) for i in range(3)]
+            days = []
+            for local_date in local_dates:
+                data = get_weather(location, local_date, 'day')
+                days.append(data)
+            up.person.days = days
+        context['people'] = user_persons
     return render(request, 'weather/home.html', context)
 
 def login_request(request):
@@ -297,8 +228,7 @@ def add_person_request(request):
         return render(request, 'weather/user_login.html', context)
 
 def detail_person(request, id):
-    context = {}
-    context['person'] = Person.objects.get(id=id)
+    context = {'person': Person.objects.get(id=id)}
     return render(request, 'weather/detail_person.html', context)
 
 def delete_person(request, id):
