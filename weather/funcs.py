@@ -1,4 +1,5 @@
 """Functions for use by models.py and views.py"""
+
 import requests
 import json
 from pathlib import Path
@@ -16,6 +17,7 @@ def get_all_timezones():
     return timezones
 
 def get_timezone(lat, long):
+    """Get timezone for latitude/longitude pair from Google Time Zones API"""
     base_url = "https://maps.googleapis.com/maps/api/timezone/json?"
     params = {'location': f'{lat},{long}',
               'timestamp': str(int(datetime.timestamp(datetime.now()))),
@@ -28,13 +30,13 @@ def get_timezone(lat, long):
         return 'America/Los_Angeles'
 
 def get_codes():
-    """Read weather code mappings from JSON file"""
+    """Read mappings from JSON file of weather codes > weather descriptions"""
     file_path = BASE_DIR.joinpath('static/weather/codes.json')
     with open(file_path) as f:
         codes = json.load(f)
     return codes['weatherCode'], codes['weatherCodeDay']
 
 def get_icon_path(code: str) -> Path:
-    """Given a weather code, retrieve the relative path to the weather icon."""
+    """Retrieve the relative path to the weather icon for a given code"""
     icon_path_abs = next(ICONS_DIR.glob(f'{code}*.png'))
     return icon_path_abs.relative_to(BASE_DIR / 'static/media/')
