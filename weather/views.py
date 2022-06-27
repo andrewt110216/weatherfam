@@ -13,8 +13,8 @@ from django.utils.timezone import now  # UTC timezone (per project settings)
 from .models import Person, Weather, User_Person, Location
 from .funcs import get_codes, get_icon_path, get_timezone
 
-# REGARDING TIMEZONES
-# Timestamps are stored as UTC. Weater data is stored in the local time zone
+# Regarding Timezones
+# Timestamps are stored in UTC. Weater data is stored in the local time zone
 
 # Constants
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +27,7 @@ TIMESTEPS = {'hour': '1h', 'day': '1d'}
 TIMEDELTAS = {'hour': timedelta(hours=1), 'day': timedelta(days=3)}
 CODE_PARAM = {'hour': 'weatherCode', 'day': 'weatherCodeDay'}
 
-# Helper functions for views
-# =============================================================================
+# HELPER FUNCTIONS ===========
 def api_request(
         weather: Weather,
         current_time: datetime,
@@ -105,10 +104,8 @@ def api_request(
 def query_database(location: Location, local_now: datetime, period: str):
     HOURS = {'day': 0, 'hour': local_now.time().hour}
     try:
-        query = Weather.objects.filter(location=location,
-                                       date=local_now.date(),
-                                       hour=HOURS[period],
-                                       step=TIMESTEPS[period])
+        query = Weather.objects.filter(location=location, date=local_now.date(),
+                    hour=HOURS[period],step=TIMESTEPS[period])
         return query.order_by("-timestamp")[:1].get()
     except Weather.DoesNotExist:
         return None
@@ -126,8 +123,7 @@ def get_weather(location: Location, local_now: datetime, period: str) -> dict:
         data['day_name'] = local_now.strftime("%A")
     return data
 
-# Create your views here.
-# =============================================================================
+# VIEW FUNCTIONS ===========
 def home(request):
     context = {}
     if request.user.is_authenticated:
@@ -169,22 +165,18 @@ def registration_request(request):
     if request.method == 'GET':
         return render(request, 'weather/user_registration.html', context)
     elif request.method == 'POST':
-        # Check if user exists
         username = request.POST['username']
-        password = request.POST['password']
-        first_name = request.POST['firstname']
-        last_name = request.POST['lastname']
         user_exist = False
         try:
             User.objects.get(username=username)
             user_exist = True
-        except:
-            print(f"> Log: {username} is new user")
+        except User.DoesNotExist:
+            pass
         if not user_exist:
             user = User.objects.create_user(username=username,
-                    first_name=first_name,
-                    last_name=last_name,
-                    password=password)
+                    first_name=request.POST['firstname'],
+                    last_name=request.POST['lastname'],
+                    password=request.POST['password'])
             login(request, user)
             return redirect("weather:home")
         else:
@@ -211,6 +203,7 @@ def add_person_request(request):
                     longitude=longitude,
                     timezone=get_timezone(latitude, longitude))
                 new_location.save()
+
             new_person = Person.objects.create(
                 name=request.POST['name'],
                 location=new_location)
