@@ -1,4 +1,5 @@
 {% extends "weather/base.html" %}
+
 {% block content %}
 {% if user.is_authenticated %}
     <div class="d-flex justify-content-between align-items-center mt-4 mx-4">
@@ -18,7 +19,10 @@
             <div class="card m-4 border-dark"> <!-- Card -->
                 <div class="card-header card-header-custom"> <!-- Card Header-->
                     <div class="row align-items-center">
-                        <div class="column col-sm"><img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}" width="100em" height="100em" alt="Profile Image"></div>
+                        <div class="column col-sm">
+                            <img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}"
+                                 width="100em" height="100em" alt="Profile Image">
+                        </div>
                         <div class="column col-sm text-center">
                             <a class="h4 mb-1" href="{% url 'weather:detail-person' up.person.id %}">{{ up.person.name }}</a>
                             <div class="h5 font-weight-light">{{ up.person.location.name }}</div>
@@ -44,9 +48,18 @@
                                 <td class="h4">{{ up.person.days.2.temp }} &deg;</td>
                             </tr>
                             <tr> <!-- Icon Row -->
-                                <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.0.icon_path }}" width="60em" height="60em" alt="n/a"><br><span class="font-weight-light h6">{{ up.person.days.0.description }}</span></td>
-                                <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.1.icon_path }}" width="60em" height="60em" alt="n/a"><br><span class="font-weight-light h6">{{ up.person.days.1.description }}</span></td>
-                                <td class="h5"><img src="{{ MEDIA_URL }}{{ up.person.days.2.icon_path }}" width="60em" height="60em" alt="n/a"><br><span class="font-weight-light h6">{{ up.person.days.2.description }}</span></td>
+                                <td class="h5">
+                                    <img src="{{ MEDIA_URL }}{{ up.person.days.0.icon_path }}" width="60em" height="60em" alt="n/a">
+                                    <br><span class="font-weight-light h6">{{ up.person.days.0.description }}</span>
+                                </td>
+                                <td class="h5">
+                                    <img src="{{ MEDIA_URL }}{{ up.person.days.1.icon_path }}" width="60em" height="60em" alt="n/a">
+                                    <br><span class="font-weight-light h6">{{ up.person.days.1.description }}</span>
+                                </td>
+                                <td class="h5">
+                                    <img src="{{ MEDIA_URL }}{{ up.person.days.2.icon_path }}" width="60em" height="60em" alt="n/a">
+                                    <br><span class="font-weight-light h6">{{ up.person.days.2.description }}</span>
+                                </td>
                             </tr>
                             </tr>
                         </table>
@@ -54,7 +67,7 @@
                 </div> <!-- End of Card Body -->
             </div> <!-- End of Card -->
         </div> <!-- End of Grid -->
-            {% endfor %}
+        {% endfor %}
     {% endif %}
     </div> <!-- End of Row Wrapping All Cards -->
 

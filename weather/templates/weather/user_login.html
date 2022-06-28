@@ -1,17 +1,16 @@
 {% extends "weather/base.html" %}
 
 {% block content %}
-<form action="{% url 'weather:login' %}" method="post">
+<form class="m-4" action="{% url 'weather:login' %}" method="post">
     {% csrf_token %}
     <div class="container"> 
       <h1>Login</h1>
+      <hr>
       <div class="form-group">
         <label for="username"><b>User Name</b></label>
-        <input id="username" class = "form-control" type="text"
-               placeholder="Enter User Name: " name="username" required>
+        <input id="username" class = "form-control mb-4" type="text" placeholder="Enter User Name: " name="username" required>
         <label for="psw"><b>Password</b></label>
-        <input id="psw" class = "form-control" type="password"
-               placeholder="Enter Password: " name="password" required>
+        <input id="psw" class = "form-control mb-4" type="password" placeholder="Enter Password: " name="password" required>
       </div>
       {% if message %}
         <div class="alert alert-warning">
