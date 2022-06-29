@@ -21,7 +21,7 @@ def get_timezone(lat, long):
     base_url = "https://maps.googleapis.com/maps/api/timezone/json?"
     params = {'location': f'{lat},{long}',
               'timestamp': str(int(datetime.timestamp(datetime.now()))),
-              'key': 'AIzaSyDVmJci0N0Tf-4KTczZ1oCYi8dHFSLpIgM'}
+              'key': 'AIzaSyD_9tPq3wcVnE44MotkL-Cvrmg8ZVMwM_Q'}
     response = requests.get(base_url, params)
     if response.status_code == 200:
         return response.json()["timeZoneId"]
