@@ -6,7 +6,7 @@
         {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/bootstrap.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/style.css' %}">
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_9tPq3wcVnE44MotkL-Cvrmg8ZVMwM_Q"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}"></script>
         <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
     </head>
     <body>

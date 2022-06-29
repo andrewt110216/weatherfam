@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'weather.context_processors.environ_vars_processor',
             ],
         },
     },
