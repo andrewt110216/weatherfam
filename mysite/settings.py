@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rqqyem6luaq9@d#yrioi+c8!#v0ne2@1v@0g^s02%-3hs-djc7'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.environ.get("DJANGO_DEBUG") == "True")
 
 ALLOWED_HOSTS = []
 
@@ -80,9 +80,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',
-        'PORT': 3306,
-        'USER': 'root',
-        'PASSWORD': 'Duck-24-California^%',
+        'PORT': os.environ.get("MYSQL_PORT"),
+        'USER': os.environ.get("MYSQL_USER_NAME"),
+        'PASSWORD': os.environ.get("MYSQL_PASSWORD"),
         'NAME': 'beta_db',
     }
 }
@@ -132,3 +132,6 @@ MEDIA_URL = 'media/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Google API Key
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
