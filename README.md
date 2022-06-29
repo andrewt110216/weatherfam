@@ -16,7 +16,7 @@ I had my Mom in mind as I came up with the idea for this app. A mother of four s
 ## Demos
 
 ### Home Page
-
+![](demo_home.gif)
 
 ### Adding a Person
 

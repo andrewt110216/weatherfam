@@ -3,7 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>WeatherFam</title>
         {% load static %}
+        <link rel="icon" type="image/x-icon" href="{{ MEDIA_URL }}/images/favicon.ico">
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/bootstrap.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/style.css' %}">
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}"></script>
