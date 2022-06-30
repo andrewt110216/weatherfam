@@ -61,5 +61,6 @@ While I originally intended for this project to be soley educational, I've becom
 - add a calendar feature for each person, so that trips or moves can be added to the calendar allowing the weather data to update accordingly
 - determine if it's possible to request and use location data from location sharing apps, like FindMy on iOS, so a person's location updates as they move
 - add a plug-in for the image upload to allow users to preview, crop, and resize before saving
+- add a more detailed view for each person, to see more weather data across more time periods, such as precipiation rates, wind speed, humidity, etc, for the next 10 hours and 7 days. This would require me to upgrade my API access!
 
 This has been a very informative and fun project to work on, and I hope it continues to be so. I'd welcome any additional thoughts or feedback! Thanks.
