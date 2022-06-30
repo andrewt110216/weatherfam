@@ -1,9 +1,10 @@
 """Functions for use by models.py and views.py"""
-
 import requests
 import json
 from pathlib import Path
 from datetime import datetime
+
+from django.conf import settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ICONS_URL = 'static/media/images/icons/'
@@ -21,13 +22,17 @@ def get_timezone(lat, long):
     base_url = "https://maps.googleapis.com/maps/api/timezone/json?"
     params = {'location': f'{lat},{long}',
               'timestamp': str(int(datetime.timestamp(datetime.now()))),
-              'key': 'AIzaSyD_9tPq3wcVnE44MotkL-Cvrmg8ZVMwM_Q'}
+              'key': settings.GOOGLE_API_KEY}
     response = requests.get(base_url, params)
     if response.status_code == 200:
-        return response.json()["timeZoneId"]
+        try:
+            return response.json()["timeZoneId"]
+        except KeyError:
+            print('KeyError accessing Google Timezone response. Default to EST')
+            return 'America/New_York'
     else:
-        print('Google Timezone API Request failed. Returning default timezone.')
-        return 'America/Los_Angeles'
+        print('Google Timezone API Request failed. Default to EST')
+        return 'America/New_York'
 
 def get_codes():
     """Read mappings from JSON file of weather codes > weather descriptions"""
