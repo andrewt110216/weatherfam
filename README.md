@@ -23,7 +23,7 @@ The following gifs from my local development demonstrate the basic functionality
 ## Home Page - Your Full WeatherFam!
 *(Don't worry, these images are all stock photos!)*
 
-<img src="demo-gifs/home.gif" width="50%"/>
+<img src="demo-gifs/home.gif" width="100%"/>
 
 <br>
 
