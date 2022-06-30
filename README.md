@@ -54,7 +54,7 @@ I am currently working on deploying the app on Heroku and will post the link her
 <br>
 
 # Future Development Ideas
-While I originally intended for this project to be soley educational, I've become very interested in the app and believe it may actually be useful for myself and others. I am excited about the idea of continuing to work on it, rolling out new features and functionality over time. Some of the ideas I have are this point are:
+While I originally intended for this project to be soley educational, I've become very interested in the app and believe it may actually be useful for myself and others. I am excited about the idea of continuing to work on it, rolling out new features and functionality over time. Some of the ideas I have at this point are:
 
 - add a search box to the map to make it easier to choose a location
 - save prior locations for each person and provide a dropdown to quickly switch between locations
