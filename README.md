@@ -30,21 +30,21 @@ The following gifs from my local development demonstrate the basic functionality
 ## 1. Sign Up
 *Please remember your password, as I don't currently have the option to reset your password by email*
 
-<img src="demo-gifs/register.gif" width="50%"/>
+<img src="demo-gifs/register.gif" width="100%"/>
 
 <br>
 
 ## 2. Add a Person
 *Add a name, upload an image (try to use a square image), pick the location on the map, and give the location a name*
 
-<img src="demo-gifs/add-person.gif" width="50%"/>
+<img src="demo-gifs/add-person.gif" width="100%"/>
 
 <br>
 
 ## 3. Edit a Person
 *Edit any of a person's name, image, location name, and/or location*
 
-<img src="demo-gifs/edit-person.gif" width="50%"/>
+<img src="demo-gifs/edit-person.gif" width="100%"/>
 
 <br>
 
