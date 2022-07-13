@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>WeatherFam</title>
         {% load static %}
-        <link rel="icon" type="image/x-icon" href="{{ MEDIA_URL }}/images/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/bootstrap.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'weather/css/style.css' %}">
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}"></script>
@@ -17,7 +17,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand navbar-custom" href="/weather/home/">
-                        <img src="{{ MEDIA_URL }}/images/favicon-white.ico" alt="WF" width="30" height="30" class="d-inline-block align-top mr-2">
+                        <img src="{% static 'images/favicon-white.ico' %}" alt="WF" width="30" height="30" class="d-inline-block align-top mr-2">
                         WeatherFam
                     </a>
                     <a class="navbar-brand navbar-custom" href="/weather/home/">Home</a>
