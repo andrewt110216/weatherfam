@@ -128,7 +128,7 @@ def delete_person(request, id):
 
 # HELPER FUNCTIONS
 def get_weather(location: Location, local_now: datetime, period: str) -> dict:
-    data = {'temp': 'n/a', 'description': 'n/a', 'icon_path': None}
+    data = {'temp': 'n/a', 'description': 'n/a', 'icon_path': ''}
     weather = query_database(location, local_now, period)
     if weather is None or weather.timestamp + API_RESULT_LIFETIME < now():
         if weather and weather.timestamp + API_RESULT_LIFETIME < now() and PRINT_DEBUG:
@@ -137,7 +137,7 @@ def get_weather(location: Location, local_now: datetime, period: str) -> dict:
     if weather:
         code = weather.weather_code
         data['description'] = CODES[period][str(code)]
-        data['icon_path'] = get_icon_path(code)
+        data['icon_path'] = get_icon_path(code).__str__
         data['temp'] = int(weather.temp)
         data['day_name'] = local_now.strftime("%A")
     return data

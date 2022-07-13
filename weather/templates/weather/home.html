@@ -14,13 +14,14 @@
         <p class="m-4">Click 'Add Person' to add a loved one, a photo, and a weather location to get started!</p>
     {% else %}
     <div class="row"> <!-- Row Wrapping All Cards -->
+        {% load static %}
         {% for up in people %}
         <div class="col-lg-6 col-md-12"> <!-- Grid -->
             <div class="card m-4 border-dark"> <!-- Card -->
                 <div class="card-header card-header-custom"> <!-- Card Header-->
                     <div class="row align-items-center">
                         <div class="column col-sm">
-                            <img class="card-img-left p-2" src="{{ MEDIA_URL }}/{{ up.person.image }}"
+                            <img class="card-img-left p-2" src="{% static up.person.image.name %}"
                                  width="100em" height="100em" alt="Profile Image">
                         </div>
                         <div class="column col-sm text-center">
@@ -29,7 +30,7 @@
                         </div>
                         <div class="column col-sm text-right pr-4"> <!-- Current Weather -->
                             <div class="h4">{{ up.person.cur_weather.temp }} &deg;</div>
-                            <img src="{{ MEDIA_URL }}{{ up.person.cur_weather.icon_path }}" width="50em" height="50em" alt="n/a">
+                            <img src="{% static up.person.cur_weather.icon_path %}" width="50em" height="50em" alt="n/a">
                             <div class="font-weight-light h6">{{ up.person.cur_weather.description }}</div>
                         </div>
                     </div>
@@ -49,15 +50,15 @@
                             </tr>
                             <tr> <!-- Icon Row -->
                                 <td class="h5">
-                                    <img src="{{ MEDIA_URL }}{{ up.person.days.0.icon_path }}" width="60em" height="60em" alt="n/a">
+                                    <img src="{% static up.person.days.0.icon_path %}" width="60em" height="60em" alt="n/a">
                                     <br><span class="font-weight-light h6">{{ up.person.days.0.description }}</span>
                                 </td>
                                 <td class="h5">
-                                    <img src="{{ MEDIA_URL }}{{ up.person.days.1.icon_path }}" width="60em" height="60em" alt="n/a">
+                                    <img src="{% static up.person.days.1.icon_path %}" width="60em" height="60em" alt="n/a">
                                     <br><span class="font-weight-light h6">{{ up.person.days.1.description }}</span>
                                 </td>
                                 <td class="h5">
-                                    <img src="{{ MEDIA_URL }}{{ up.person.days.2.icon_path }}" width="60em" height="60em" alt="n/a">
+                                    <img src="{% static up.person.days.2.icon_path %}" width="60em" height="60em" alt="n/a">
                                     <br><span class="font-weight-light h6">{{ up.person.days.2.description }}</span>
                                 </td>
                             </tr>
