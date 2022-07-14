@@ -13,9 +13,9 @@ After many months of dedicated studying and working on smaller projects, Weather
 When I came up with the idea for this project, I had my Mom in mind. With four sons that are now spread across the country (Maryland, New York, Illinois, and California), she always wants to know what kind of weather we're experiencing, so she knows we are safe and happy. Most weather apps are focused on seeing the forecast for one place at a time and providing every data point imaginable for that location. My goal was to bring only the pertinent information my Mom would want (temperature and primary weather event) into one simple, digestable view.
 
 ## Technology
-The app is built on Django with a MySQL database. Weather data is retrieved from the Tomorrow.io API, and Google Maps API's are used for the location picking on a map and to obtain time zones for selected locations. The front end relies on Bootstrap, with a modest amount of custom CSS and JavaScript.
+The app is built on Django with a MySQL database. Weather data is retrieved from the Tomorrow.io API, and Google Maps API's are used for the location picking on a map and to obtain time zones for selected locations. Files are stored in an AWS S3 bucket. The front end relies on Bootstrap, with a modest amount of custom CSS and JavaScript.
 
-While currently developed on my local machine, in time, the site will use an AWS S3 bucket to store user-uploaded image files and then be deployed on Heroku.
+I am currently working on deploying the app on Heroku.
 
 # Demos
 The following gifs from my local development demonstrate the basic functionality of the site.
