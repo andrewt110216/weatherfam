@@ -22,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get("DJANGO_DEBUG") == "True")
+DEBUG = (os.environ.get("DEBUG") == "True")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://weatherfam.herokuapp.com/','127.0.0.1']
 
 
 # Application definition
@@ -146,7 +146,7 @@ AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 AWS_DEFAULT_ACL = 'public-read'
-# AWS_QUERYSTRING_AUTH = False
+AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
 # AWS_LOCATION - optional, path prefix to be prepended to all uploads
 AWS_S3_REGION_NAME = 'us-west-1'
