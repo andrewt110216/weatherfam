@@ -137,7 +137,7 @@ def get_weather(location: Location, local_now: datetime, period: str) -> dict:
     if weather:
         code = weather.weather_code
         data['description'] = CODES[period][str(code)]
-        data['icon_path'] = get_icon_path(code).__str__
+        data['icon_path'] = get_icon_path(code)
         data['temp'] = int(weather.temp)
         data['day_name'] = local_now.strftime("%A")
     return data

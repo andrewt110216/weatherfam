@@ -41,7 +41,10 @@ def get_codes():
         codes = json.load(f)
     return codes['weatherCode'], codes['weatherCodeDay']
 
-def get_icon_path(code: str) -> Path:
+def get_icon_path(code: str) -> str:
     """Retrieve the relative path to the weather icon for a given code"""
-    icon_path_abs = next(ICONS_DIR.glob(f'{code}*.png'))
-    return icon_path_abs.relative_to(BASE_DIR / 'static/media/')
+    try:
+        icon_path_abs = next(ICONS_DIR.glob(f'{code}*.png'))
+    except:
+        return ''
+    return icon_path_abs.relative_to(BASE_DIR / 'static/media/').__str__

@@ -2,22 +2,22 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-    <div class="d-flex justify-content-between align-items-center mt-4 mx-4">
+    <div class="d-flex justify-content-between align-items-center mt-4 mx-3">
         <h2 class="text-right">My People</h2>
         <div>
             <a class="btn btn-success" href="/add-person/">+ Add Person</a>
         </div>
     </div>
 
-    <hr color=#2C3E50 class="mx-4">
+    <hr color=#2C3E50 class="mx-3">
     {% if not people %}
-        <p class="m-4">Click 'Add Person' to add a loved one, a photo, and a weather location to get started!</p>
+        <p class="m-3">Click 'Add Person' to add a loved one, a photo, and a weather location to get started!</p>
     {% else %}
     <div class="row"> <!-- Row Wrapping All Cards -->
         {% load static %}
         {% for up in people %}
         <div class="col-lg-6 col-md-12"> <!-- Grid -->
-            <div class="card m-4 border-dark"> <!-- Card -->
+            <div class="card m-3 border-dark"> <!-- Card -->
                 <div class="card-header card-header-custom"> <!-- Card Header-->
                     <div class="row align-items-center">
                         <div class="column col-sm">
