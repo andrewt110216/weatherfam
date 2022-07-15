@@ -13,9 +13,14 @@ After many months of dedicated studying and working on smaller projects, Weather
 When I came up with the idea for this project, I had my Mom in mind. With four sons that are now spread across the country (Maryland, New York, Illinois, and California), she always wants to know what kind of weather we're experiencing, so she knows we are safe and happy. Most weather apps are focused on seeing the forecast for one place at a time and providing every data point imaginable for that location. My goal was to bring only the pertinent information my Mom would want (temperature and primary weather event) into one simple, digestable view.
 
 ## Technology
-The app is built on Django with a MySQL database. Weather data is retrieved from the Tomorrow.io API, and Google Maps API's are used for the location picking on a map and to obtain time zones for selected locations. Files are stored in an AWS S3 bucket. The front end relies on Bootstrap, with a modest amount of custom CSS and JavaScript.
+The app is built on Django and deployed on Heroku, using a MySQL database through Heroku's ClearDB add-on. Weather data is retrieved from the Tomorrow.io API, and Google Maps API's are used for the location picking on a map and to obtain time zones for selected locations. Files are stored in an AWS S3 bucket. The front end relies on Bootstrap, with a modest amount of custom CSS and JavaScript.
 
-I am currently working on deploying the app on Heroku.
+# Deployment
+The site has been deployed on Heroku and is live at: https://weatherfam.herokuapp.com/
+
+Please feel free to try it out! Be aware that the number of requests to the API (Tomorrow.io) is limited under my free accout, so if you don't see any weather data dispalyed, try refreshing or trying again in a few minutes.
+
+<br>
 
 # Demos
 The following gifs from my local development demonstrate the basic functionality of the site.
@@ -45,11 +50,6 @@ The following gifs from my local development demonstrate the basic functionality
 *Edit any of a person's name, image, location name, and/or location*
 
 <img src="demo-gifs/edit-person.gif" width="100%"/>
-
-<br>
-
-# Deployment
-I am currently working on deploying the app on Heroku and will post the link here when the production site is live!
 
 <br>
 
