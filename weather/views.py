@@ -10,13 +10,13 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.utils.timezone import now  # UTC timezone (per project settings)
+from django.conf import settings
 
 from .models import Person, Weather, User_Person, Location
 from .funcs import get_codes, get_icon_path, get_timezone
 
 # Constants
 PRINT_DEBUG = True  # print statements for debugging
-BASE_DIR = Path(__file__).resolve().parent.parent
 API_RESULT_LIFETIME = timedelta(hours=6)
 # Track API requests per second to prevent exceeding limit of 3
 API_REQ_PER_SEC = {}  # minute-second: requests
@@ -207,7 +207,7 @@ def create_weather_obj(interval: list, location: Location, period: str,
     return new_weather
 
 def save_json_response(response: dict, weather: Weather) -> None:
-    out_directory = BASE_DIR.parent.joinpath('mysite/weather/api-responses')
+    out_directory = Path(settings.STATIC_ROOT + '/weather/api-responses/')
     file_time = datetime.now().time().isoformat('seconds').replace(':','-')
     loc = weather.location.name.lower().replace(' ', '-').replace(',', '-')
     fn = f"{loc}-{weather.date}-T{weather.hour}-{weather.step}-{file_time}.json"
@@ -216,7 +216,7 @@ def save_json_response(response: dict, weather: Weather) -> None:
             json.dump(response, f, indent=4)
         if PRINT_DEBUG: print('\t> Saved API response')
     else:
-        if PRINT_DEBUG: print(f"\t> API response not saved: DNE: {out_directory}")
+        if PRINT_DEBUG: print(f"\t> API response not saved: DNE: {out_directory.absolute()}")
 
 def get_location(lat: str, long: str, request) -> Location:
     try:

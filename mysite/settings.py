@@ -148,5 +148,4 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 AWS_DEFAULT_ACL = 'public-read'
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
-# AWS_LOCATION - optional, path prefix to be prepended to all uploads
 AWS_S3_REGION_NAME = 'us-west-1'
