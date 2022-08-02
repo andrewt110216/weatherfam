@@ -216,7 +216,7 @@ def save_json_response(response: dict, weather: Weather) -> None:
             json.dump(response, f, indent=4)
         if PRINT_DEBUG: print('\t> Saved API response')
     else:
-        if PRINT_DEBUG: print("\t> API response not saved: path doesn't exist)")
+        if PRINT_DEBUG: print(f"\t> API response not saved: DNE: {out_directory}")
 
 def get_location(lat: str, long: str, request) -> Location:
     try:
