@@ -1,6 +1,10 @@
 # WeatherFam
 *A weather app focused on people instead of zip codes*
 
+Live site: https://weatherfam.herokuapp.com/
+
+**Note:** As of October 2022, this site is no longer actively maintained. As a result, all of the functionality of the site may not work properly. If you experience an issue on the site, reloading may resolve the issue. I do not currently anticipate continuing to deploy the site once Heroku phases out free dynos in November 2022.
+
 ## Introduction
 
 A web app that allows you to track the weather for every member of your "WeatherFam" &ndash; your friends and family living anywhere in the world.
@@ -26,28 +30,29 @@ Please feel free to try it out! Be aware that the number of requests to the API 
 The following gifs from my local development demonstrate the basic functionality of the site.
 
 ## Home Page - Your Full WeatherFam!
-*(Don't worry, these images are all stock photos!)*
 
 <img src="demo-gifs/home.gif" width="100%"/>
+
+*(Don't worry, these images are all stock photos, not my family members.)*
 
 <br>
 
 ## 1. Sign Up
-*Please remember your password, as I don't currently have the option to reset your password by email*
+*Please remember your password, as I don't currently have the option for password reset*
 
 <img src="demo-gifs/register.gif" width="100%"/>
 
 <br>
 
 ## 2. Add a Person
-*Add a name, upload an image (try to use a square image), pick the location on the map, and give the location a name*
+*Add a name, upload an image (square image works best), pick the location on the map, and give the location a name*
 
 <img src="demo-gifs/add-person.gif" width="100%"/>
 
 <br>
 
 ## 3. Edit a Person
-*Edit any of a person's name, image, location name, and/or location*
+*Edit a person's name, image, and/or location*
 
 <img src="demo-gifs/edit-person.gif" width="100%"/>
 
