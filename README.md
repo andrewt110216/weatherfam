@@ -1,9 +1,7 @@
 # WeatherFam
 *A weather app focused on people instead of zip codes*
 
-Live site (NO LONGER WORKING DUE TO HEROKU'S CHANGES TO FREE PLANS): https://weatherfam.herokuapp.com/
-
-**Note:** As of October 2022, this site is no longer actively maintained. As a result, all of the functionality of the site may not work properly. If you experience an issue on the site, reloading may resolve the issue. I do not currently anticipate continuing to deploy the site once Heroku phases out free dynos in November 2022.
+Note: the app was previously deployed on Heroku, but has since been deleted and is no longer running or accessible.
 
 ## Introduction
 
